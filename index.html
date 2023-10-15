@@ -3,60 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TOP Etch-A-Sketch</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {    
-            function createGrid() {
-                let gridContainer = document.querySelector('.gridContainer');
-                gridContainer.innerHTML = '';
-
-                for (let gridX = 1; gridX < 17; gridX++) {
-                    for (let gridY=1; gridY < 17; gridY++) {
-                        let divGrid = document.createElement('div');
-                        divGrid.classList.add('grid')
-                        divGrid.id = 'gridX' + gridX + 'Y' + gridY;
-                        gridContainer.appendChild(divGrid);
-
-                        let hoverGrid = document.getElementById(divGrid.id);
-                        hoverGrid.addEventListener('mouseover', function () {
-                            hoverGrid.style.backgroundColor = 'white';
-                        })
-
-                        console.log(divGrid.id);
-                    }
-                }
-            }
-
-            createGrid();
-
-            const gridSizeButton = document.querySelector('.gridButton input');
-            gridSizeButton.addEventListener("click", function(){
-                const newSize = prompt('Enter the grid size (up to 64):');
-                const parsedSize = parseInt(newSize, 10);
-
-                if (!isNaN(parsedSize) && parsedSize >= 1 && parsedSize <= 64) {
-                    createGrid(parsedSize);
-                } else {
-                    alert('Please enter a valid grid size (1-64).');
-                }
-            });
-            
-
-
+    document.addEventListener('DOMContentLoaded', function () {    
+        createGrid(16); //Create the grid on DOM load
+        setButtons(); //Set the button event listeners on DOM load
     });
 
-    </script>
-    <div class="container">
-        <div class="gridButton">
-        <input type="button" id="gridSize" value="Set the grid size!">
-        </div>
-        <div class="gridContainer">
+    function createGrid(gridSize) {
+        let gridContainer = document.querySelector('.gridContainer');
+        gridContainer.innerHTML = ''; //Clear the grids current state
+
+        let cellWidth = 480/gridSize + "px"; //Declare the cell width based on gridSize
+        let cellHeight = 480/gridSize + "px";//Declare the cell height basedo on gridSize
+
+        for (let gridX = 1; gridX < gridSize + 1; gridX++) { //Loop create the x dimensions
             
+            for (let gridY = 1; gridY < gridSize + 1; gridY++) { //Loop create the y dimensions
+                
+                let divGrid = document.createElement('div'); //Create the div
+                
+                divGrid.classList.add('grid'); //Set the div class
+                
+                divGrid.id = 'gridX' + gridX + 'Y' + gridY; // Set the div ID
+                
+                const cellDimensions = document.createAttribute("style"); //Set the css style
+                cellDimensions.value = 'width: ' + cellWidth + '; '  // of the cell dimensions
+                                        + 'height: ' + cellHeight + ';';
+                divGrid.setAttributeNode(cellDimensions);
+                
+                gridContainer.appendChild(divGrid); //Append the above to the child div
+
+                let hoverGrid = document.getElementById(divGrid.id); //On hover set white
+                hoverGrid.addEventListener('mouseover', function () {
+                    hoverGrid.style.backgroundColor = 'white';
+                })
+            }
+        }
+    }
+
+    function setButtons() {
+        const gridSizeButton = document.getElementById('gridSize'); //Find gridSize ID button
+        const gridResetButton = document.getElementById('gridReset'); //Find gridReset ID button
+        let parsedSize; //Declare parsedSize to be accessible to both buttons
+
+        gridSizeButton.addEventListener('click', function(){ //Prompt user for grid size
+            const newSize = prompt('Enter the grid size (up to 64):');
+            parsedSize = parseInt(newSize, 10);
+
+            if (!isNaN(parsedSize) && parsedSize >= 1 && parsedSize <= 64) { //Is parsedSize between 1-64
+                createGrid(parsedSize);
+                return parsedSize;
+            } else { //Entry validation
+                alert('Please enter a valid grid size (1-64).');
+            }
+        });
+
+        gridResetButton.addEventListener('click', function(){ //Reset the grid if parsedSize is set
+            if (!isNaN(parsedSize) && parsedSize >= 1 && parsedSize <= 64){
+                createGrid(parsedSize);
+            }
+            else { //If parsedSize is not set, restore to default
+                createGrid(16);
+            }
+        });
+
+    }
+
+    </script>
+    <div class="buttonContainer">
+        <div class="gridButton">
+            <input type="button" id="gridSize" value="Set the grid size!">
+            <input type="button" id="gridReset" value="Reset the grid!">
         </div>
     </div>
-    
+
+    <div class="gridContainer">
+            
+    </div>   
+
 </body>
 </html>
