@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {    
+            function createGrid() {
+                let gridContainer = document.querySelector('.gridContainer');
+                gridContainer.innerHTML = '';
+
+                for (let gridX = 1; gridX < 17; gridX++) {
+                    for (let gridY=1; gridY < 17; gridY++) {
+                        let divGrid = document.createElement('div');
+                        divGrid.classList.add('grid')
+                        divGrid.id = 'gridX' + gridX + 'Y' + gridY;
+                        gridContainer.appendChild(divGrid);
+
+                        let hoverGrid = document.getElementById(divGrid.id);
+                        hoverGrid.addEventListener('mouseover', function () {
+                            hoverGrid.style.backgroundColor = 'white';
+                        })
+
+                        console.log(divGrid.id);
+                    }
+                }
+            }
+
+            createGrid();
+
+            const gridSizeButton = document.querySelector('.gridButton input');
+            gridSizeButton.addEventListener("click", function(){
+                const newSize = prompt('Enter the grid size (up to 64):');
+                const parsedSize = parseInt(newSize, 10);
+
+                if (!isNaN(parsedSize) && parsedSize >= 1 && parsedSize <= 64) {
+                    createGrid(parsedSize);
+                } else {
+                    alert('Please enter a valid grid size (1-64).');
+                }
+            });
+            
+
+
+    });
+
+    </script>
+    <div class="container">
+        <div class="gridButton">
+        <input type="button" id="gridSize" value="Set the grid size!">
+        </div>
+        <div class="gridContainer">
+            
+        </div>
+    </div>
+    
+</body>
+</html>
